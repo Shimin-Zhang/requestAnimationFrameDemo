@@ -23,8 +23,11 @@ function getRandomOffset(x, y, mult) {
 }
 
 function getUpdatedPositions(dt, x, y, xp, yp, v) {
-    const dxdt = Math.round(v * (xp - x) * dt);
-    const dydt = Math.round(v * (yp - y) * dt);
+    const minDist = 1;
+    const DX = Math.abs(xp - x) < minDist ? 1 : (xp-x);
+    const DY = Math.abs(yp - y) < minDist ? 1 : (yp-y);
+    const dxdt = Math.round(v * DX * dt);
+    const dydt = Math.round(v * DY * dt);
     return [(x + dxdt), (y + dydt)];
 }
 
@@ -35,7 +38,7 @@ function getRandomHSLColor(s, l) {
 }
 
 window.onload = () => {
-    const NumSparks = 5;
+    const NumSparks = 50;
     const sparksCont = document.getElementById('spark-cont');
 
     const sparksFly = (e) => {
