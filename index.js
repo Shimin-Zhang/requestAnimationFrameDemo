@@ -25,9 +25,13 @@ function getRandomOffset(x, y, mult) {
 function getUpdatedPositions(dt, x, y, xp, yp, v) {
     const dxdt = Math.round(v * (xp - x) * dt);
     const dydt = Math.round(v * (yp - y) * dt);
-    console.log('dxdt', dxdt)
-    console.log('dydt', dydt)
     return [(x + dxdt), (y + dydt)];
+}
+
+function getRandomHSLColor(s, l) {
+    const h = Math.round(Math.random() * 360);
+    console.log(`hsl(${h},${s}%, ${l}%)`);
+    return `hsl(${h},${s}%, ${l}%)`;
 }
 
 window.onload = () => {
@@ -50,6 +54,7 @@ window.onload = () => {
         newSpark.style = `position: absolute; 
             left: ${xp}px; top: ${yp}px; z-index: 100;`;
         newSpark.innerHTML = sparkF;
+        newSpark.firstChild.style.color = getRandomHSLColor(70, 60);         
         sparksCont.appendChild(newSpark);
 
         // animate spark
@@ -61,6 +66,7 @@ window.onload = () => {
         let t = 0;
         let iter = 1;
         let maxIter = 100000;
+        // let maxIter = 5;
         const animate = (tp) => {
             let dt;
             // initial click we dont render, set start time instead
