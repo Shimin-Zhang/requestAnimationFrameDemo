@@ -33,7 +33,6 @@ function getUpdatedPositions(dt, x, y, xp, yp, v) {
 
 function getRandomHSLColor(s, l) {
     const h = Math.round(Math.random() * 360);
-    console.log(`hsl(${h},${s}%, ${l}%)`);
     return `hsl(${h},${s}%, ${l}%)`;
 }
 
@@ -64,7 +63,7 @@ window.onload = () => {
         animateSpark(newSpark, x, y, xp, yp)
     }
 
-    animateSpark = (spark, x, y, xp, yp) => {
+    const animateSpark = (spark, x, y, xp, yp) => {
         const velocity = 5;
         let t = 0;
         let iter = 1;
@@ -92,4 +91,41 @@ window.onload = () => {
 
     const btn = document.getElementById('start');
     btn.addEventListener('click', sparksFly);
+
+
+    // Framerate and delay Calculation
+    const windowSize = 25;
+    const times=[];
+
+    for (let i=0; i< windowSize; ++i) {
+        times[i]=0.0;
+    }
+
+    let lastIdx = 0;
+
+    function callbackFired(time) {
+        times[lastIdx] = time;
+        lastIdx = (lastIdx + 1) % windowSize;
+
+        let sum=0.0;
+        for (let i=0; i< windowSize; ++i) {
+            sum += times[i];
+        }
+        let avg = sum/windowSize;
+        document.getElementById("delay").textContent = Math.round(avg);
+        document.getElementById("framerate").textContent = Math.round(1000.0/avg);
+    }
+
+    let time = Date.now();
+    let lastFireTime;
+
+    function measureRAF(t) {
+        time = Date.now();
+        if (lastFireTime !== undefined) {
+            callbackFired(time - lastFireTime);
+        }
+        lastFireTime = time;
+        window.requestAnimationFrame(measureRAF);
+    }
+    window.requestAnimationFrame(measureRAF);
 };
